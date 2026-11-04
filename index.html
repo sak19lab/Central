@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>おはら祭り 参加案内</title>
+<style>
+:root{
+  --bg:#f8f4ec; --card:#fff; --ink:#1f2433; --muted:#6b6f7b; --line:#e5ddcf;
+  --accent:#b8322a; --accent-soft:#f6e3df; --indigo:#22346b; --indigo-soft:#e4e8f3;
+}
+@media (prefers-color-scheme:dark){
+  :root{ --bg:#15171d; --card:#1f222b; --ink:#ecedf1; --muted:#9aa0ad; --line:#323642;
+    --accent:#e0675d; --accent-soft:#3a2523; --indigo:#9fb2e8; --indigo-soft:#262d42; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",system-ui,sans-serif;
+  line-height:1.7;-webkit-text-size-adjust:100%}
+main{max-width:640px;margin:0 auto;padding:16px 16px 48px}
+h1{font-size:1.5rem;line-height:1.35;margin:.2em 0}
+h2{font-size:1.05rem;margin:0 0 .6em;display:flex;align-items:center;gap:.5em}
+h2::before{content:"";width:6px;height:1.1em;background:var(--accent);border-radius:3px}
+.hero{background:var(--indigo);color:#fff;border-radius:16px;padding:20px 18px;margin-bottom:16px}
+@media (prefers-color-scheme:dark){.hero{background:#22346b}}
+.hero .org{font-size:.85rem;opacity:.85}
+.hero .date{font-size:1.1rem;font-weight:700}
+.hero .upd{font-size:.75rem;opacity:.75;margin-top:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+.keys{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.key{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.key .lbl{font-size:.8rem;color:var(--muted)}
+.key .t{font-size:1.6rem;font-weight:800;color:var(--accent);line-height:1.2}
+.key .p{font-size:.85rem}
+.tl{list-style:none;margin:0;padding:0}
+.tl li{display:grid;grid-template-columns:4.2em 1fr;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line)}
+.tl li:last-child{border-bottom:0}
+.tl .tm{font-weight:800;color:var(--indigo);font-variant-numeric:tabular-nums}
+ul.b{margin:0;padding-left:1.2em}
+ul.b li{margin:.15em 0}
+table.fee{width:100%;border-collapse:collapse}
+table.fee td{padding:6px 0;border-bottom:1px solid var(--line)}
+table.fee td:last-child{text-align:right;font-weight:700}
+.note{font-size:.9rem;color:var(--muted);white-space:pre-line;margin-top:8px}
+.pre{white-space:pre-line}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.btn,button{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--ink);
+  border-radius:10px;padding:10px 14px;font:inherit;font-size:.95rem;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.primary,button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+.foot{text-align:center;font-size:.8rem;color:var(--muted);margin-top:24px}
+.foot a{color:var(--muted)}
+/* editor */
+.lead{color:var(--muted);font-size:.9rem}
+label{display:block;font-size:.85rem;font-weight:700;margin:10px 0 4px}
+input,textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 10px;font:inherit;font-size:16px;
+  background:var(--bg);color:var(--ink)}
+textarea{min-height:5.5em;resize:vertical}
+.row{display:grid;grid-template-columns:5.5em 1fr 2.4em;gap:6px;margin-bottom:6px}
+.row.fee{grid-template-columns:1fr 7em 2.4em}
+.row button{padding:0}
+.actions{position:sticky;bottom:0;background:var(--bg);padding:12px 0;display:flex;gap:8px;flex-wrap:wrap}
+.out textarea{min-height:12em;font-size:14px}
+.out input{font-size:14px}
+.warn{color:var(--accent);font-size:.85rem}
+.hero .newtab{margin-top:10px;font-size:.85rem;padding:6px 12px;background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.4);color:#fff}
+/* Notion などに埋め込まれたとき */
+.embed main{padding:8px 10px 24px}
+.embed .hero{padding:12px 14px;border-radius:12px;margin-bottom:10px}
+.embed h1{font-size:1.15rem}
+.embed .card{padding:12px;margin-bottom:10px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);
+  padding:8px 16px;border-radius:999px;font-size:.9rem;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.on{opacity:1}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<div class="toast" id="toast"></div>
+<script>
+const DEFAULTS = {
+  title: 'おはら祭り 参加のご案内',
+  org: '鹿児島中央高校同窓会',
+  date: '2026-11-03',
+  recvTime: '8:30', recvPlace: '鹿児島中央高校 好学館2階',
+  change: '女性：好学館2階\n男性：好学館3階',
+  meetTime: '9:30', meetPlace: '好学館3階',
+  timeline: [
+    ['8:30', '受付開始・着替え'],
+    ['9:30', '事務局からの連絡'],
+    ['9:35', '記念撮影（出発10分前までに）'],
+    ['9:45', '鹿児島中央高校を出発'],
+    ['10:45', '踊りスタート'],
+    ['11:45', '踊り終了'],
+    ['13:00', '同窓会室から退室（13:00に施錠します）'],
+  ],
+  dress: '法被（レンタルまたは購入。受付でお渡しします）\n白短パン\n足元：白足袋（エアージョグ）、または白靴下＋白スニーカー',
+  fees: [['参加費', '1,000円'], ['法被レンタル', '3,000円'], ['法被購入', '10,000円']],
+  feeNote: '渋谷踊り連の方は参加費不要です。\n受付でお支払いください。',
+  bring: '参加費・法被代\n服装一式（白短パン・足袋など）\nタオル',
+  parking: '校内駐車場を利用できます。',
+  notes: 'レンタルの法被・帯は踊り終了後に回収します。\n13:00に同窓会室を施錠します。それまでに荷物を持って退室してください。',
+  map: '鹿児島中央高校',
+  contact: 'わからないことは幹事までLINEでご連絡ください。',
+  updated: '',
+};
+
+const FIELDS = [
+  { sec: '基本', items: [['title', 'タイトル'], ['org', '主催'], ['date', '開催日', 'date']] },
+  { sec: '受付・更衣・集合', items: [['recvTime', '受付開始（例 8:30）'], ['recvPlace', '受付場所'], ['change', '更衣場所', 'area'], ['meetTime', '集合時刻'], ['meetPlace', '集合場所']] },
+  { sec: '当日の流れ', list: 'timeline' },
+  { sec: '服装', items: [['dress', '服装（1行に1つ）', 'area']] },
+  { sec: '料金', list: 'fees', items: [['feeNote', '料金の補足', 'area']] },
+  { sec: '持ち物・駐車場', items: [['bring', '持ち物（1行に1つ）', 'area'], ['parking', '駐車場', 'area']] },
+  { sec: '注意事項・連絡先', items: [['notes', '注意事項（1行に1つ）', 'area'], ['map', '地図で開く場所（検索ワード）'], ['contact', '問い合わせ', 'area']] },
+];
+
+const app = document.getElementById('app');
+const DRAFT_KEY = 'ohara-draft';
+
+/* ---------- helpers ---------- */
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const lines = s => String(s || '').split('\n').map(t => t.trim()).filter(Boolean);
+const WD = ['日', '月', '火', '水', '木', '金', '土'];
+function fmtDate(iso) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+  if (!m) return iso || '';
+  const d = new Date(+m[1], m[2] - 1, +m[3]);
+  return `${+m[1]}年${+m[2]}月${+m[3]}日（${WD[d.getDay()]}）`;
+}
+function parseTime(s) {
+  const m = /(\d{1,2})[:：](\d{2})/.exec(s || '');
+  return m ? [+m[1], +m[2]] : null;
+}
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('on');
+  clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('on'), 1600);
+}
+// Notion などの埋め込み内ではクリップボードが使えないことがあるので、だめなら欄を選択して手動コピーしてもらう
+async function copy(text, field) {
+  try { await navigator.clipboard.writeText(text); return toast('コピーしました'); } catch {}
+  let ok = false;
+  try {
+    const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta);
+    ta.select(); ok = document.execCommand('copy'); ta.remove();
+  } catch {}
+  if (ok) return toast('コピーしました');
+  if (field) { field.focus(); field.select(); }
+  toast('選択しました。長押し（右クリック）でコピーしてください');
+}
+const embedded = (() => { try { return window.self !== window.top; } catch { return true; } })();
+if (embedded) document.documentElement.classList.add('embed');
+
+/* ---------- URL encode / decode (JSON → deflate → base64url) ---------- */
+function b64u(bytes) {
+  let s = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function unb64u(str) {
+  const s = atob(str.replace(/-/g, '+').replace(/_/g, '/'));
+  return Uint8Array.from(s, c => c.charCodeAt(0));
+}
+async function encode(obj) {
+  const bytes = new TextEncoder().encode(JSON.stringify(obj));
+  if ('CompressionStream' in window) {
+    const stream = new Blob([bytes]).stream().pipeThrough(new CompressionStream('deflate-raw'));
+    return 'z' + b64u(new Uint8Array(await new Response(stream).arrayBuffer()));
+  }
+  return 'j' + b64u(bytes);
+}
+async function decode(code) {
+  let bytes = unb64u(code.slice(1));
+  if (code[0] === 'z') {
+    const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+    bytes = new Uint8Array(await new Response(stream).arrayBuffer());
+  }
+  return JSON.parse(new TextDecoder().decode(bytes));
+}
+
+/* ---------- calendar ---------- */
+function eventTimes(d) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d.date || '');
+  if (!m) return null;
+  const st = parseTime(d.recvTime) || [9, 0];
+  let en = null;
+  for (const [t] of d.timeline || []) { const p = parseTime(t); if (p) en = p; }
+  if (!en || en[0] * 60 + en[1] <= st[0] * 60 + st[1]) en = [st[0] + 4, st[1]];
+  // JST → UTC
+  const utc = ([h, mi]) => new Date(Date.UTC(+m[1], m[2] - 1, +m[3], h - 9, mi));
+  const f = dt => dt.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  return { start: f(utc(st)), end: f(utc(en)) };
+}
+function calDetails(d) {
+  return (d.timeline || []).map(([t, c]) => `${t} ${c}`).join('\n') + '\n\n' + location.href;
+}
+function googleCalUrl(d) {
+  const t = eventTimes(d); if (!t) return '#';
+  const q = new URLSearchParams({ action: 'TEMPLATE', text: d.title, dates: `${t.start}/${t.end}`,
+    location: d.recvPlace, details: calDetails(d) });
+  return 'https://calendar.google.com/calendar/render?' + q;
+}
+function downloadIcs(d) {
+  const t = eventTimes(d); if (!t) return;
+  const e = s => String(s).replace(/\\/g, '\\\\').replace(/[,;]/g, m => '\\' + m).replace(/\n/g, '\\n');
+  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//ohara-annai//JP', 'BEGIN:VEVENT',
+    `UID:${t.start}-ohara@annai`, `DTSTAMP:${t.start}`, `DTSTART:${t.start}`, `DTEND:${t.end}`,
+    `SUMMARY:${e(d.title)}`, `LOCATION:${e(d.recvPlace)}`, `DESCRIPTION:${e(calDetails(d))}`,
+    'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' }));
+  a.download = 'ohara.ics'; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+/* ---------- LINE text ---------- */
+function lineText(d, url) {
+  const out = [`【${d.title}】`, `${fmtDate(d.date)}　主催：${d.org}`, ''];
+  out.push(`▼受付　${d.recvTime}〜　${d.recvPlace}`);
+  if (lines(d.change).length) out.push(`▼更衣　${lines(d.change).join('／')}`);
+  out.push(`▼集合　${d.meetTime}　${d.meetPlace}`, '');
+  if (d.timeline.length) { out.push('▼当日の流れ'); d.timeline.forEach(([t, c]) => out.push(`${t}　${c}`)); out.push(''); }
+  if (lines(d.dress).length) { out.push('▼服装'); lines(d.dress).forEach(l => out.push('・' + l)); out.push(''); }
+  if (d.fees.length) { out.push('▼料金'); d.fees.forEach(([k, v]) => out.push(`・${k}　${v}`)); lines(d.feeNote).forEach(l => out.push('※' + l)); out.push(''); }
+  if (lines(d.bring).length) { out.push('▼持ち物'); lines(d.bring).forEach(l => out.push('・' + l)); out.push(''); }
+  if (d.parking) out.push('▼駐車場', d.parking, '');
+  if (lines(d.notes).length) { out.push('▼注意'); lines(d.notes).forEach(l => out.push('・' + l)); out.push(''); }
+  out.push('詳しくはこちら👇', url);
+  if (d.contact) out.push('', d.contact);
+  return out.join('\n');
+}
+
+/* ---------- view (participants) ---------- */
+function renderView(d, code) {
+  const bullets = s => `<ul class="b">${lines(s).map(l => `<li>${esc(l)}</li>`).join('')}</ul>`;
+  const card = (title, body) => body ? `<section class="card"><h2>${esc(title)}</h2>${body}</section>` : '';
+  const mapUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(d.map || d.recvPlace);
+  document.title = d.title;
+  app.innerHTML = `
+    <header class="hero">
+      <div class="org">${esc(d.org)}</div>
+      <h1>${esc(d.title)}</h1>
+      <div class="date">${esc(fmtDate(d.date))}</div>
+      ${d.updated ? `<div class="upd">最終更新：${esc(fmtDate(d.updated))}</div>` : ''}
+    </header>
+    <div class="keys">
+      <div class="key"><div class="lbl">受付</div><div class="t">${esc(d.recvTime)}</div><div class="p">${esc(d.recvPlace)}</div></div>
+      <div class="key"><div class="lbl">着替えて集合</div><div class="t">${esc(d.meetTime)}</div><div class="p">${esc(d.meetPlace)}</div></div>
+    </div>
+    ${card('更衣場所', lines(d.change).length ? bullets(d.change) : '')}
+    ${card('当日の流れ', d.timeline.length ? `<ul class="tl">${d.timeline.map(([t, c]) => `<li><span class="tm">${esc(t)}</span><span>${esc(c)}</span></li>`).join('')}</ul>` : '')}
+    ${card('服装', lines(d.dress).length ? bullets(d.dress) : '')}
+    ${card('料金', d.fees.length ? `<table class="fee">${d.fees.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('')}</table>${d.feeNote ? `<div class="note">${esc(d.feeNote)}</div>` : ''}` : '')}
+    ${card('持ち物', lines(d.bring).length ? bullets(d.bring) : '')}
+    ${card('駐車場', d.parking ? `<div class="pre">${esc(d.parking)}</div>` : '')}
+    ${card('注意事項', lines(d.notes).length ? bullets(d.notes) : '')}
+    <section class="card"><h2>便利ボタン</h2>
+      <div class="btns">
+        <a class="btn primary" href="${esc(mapUrl)}" target="_blank" rel="noopener">地図を開く</a>
+        <a class="btn" href="${esc(googleCalUrl(d))}" target="_blank" rel="noopener">Googleカレンダーに追加</a>
+        <button type="button" id="ics">iPhoneカレンダーに追加</button>
+      </div>
+    </section>
+    ${card('問い合わせ', d.contact ? `<div class="pre">${esc(d.contact)}</div>` : '')}
+    <div class="foot"><a href="#e=${code}">幹事用：この案内を編集する</a></div>`;
+  document.getElementById('ics').onclick = () => downloadIcs(d);
+}
+
+/* ---------- editor (幹事) ---------- */
+function rowHtml(kind, a = '', b = '') {
+  return kind === 'timeline'
+    ? `<div class="row" data-list="timeline"><input value="${esc(a)}" placeholder="9:30" aria-label="時刻"><input value="${esc(b)}" placeholder="内容" aria-label="内容"><button type="button" class="del" aria-label="削除">×</button></div>`
+    : `<div class="row fee" data-list="fees"><input value="${esc(a)}" placeholder="項目" aria-label="項目"><input value="${esc(b)}" placeholder="金額" aria-label="金額"><button type="button" class="del" aria-label="削除">×</button></div>`;
+}
+function renderEditor(d) {
+  document.title = 'おはら祭り 案内づくり（幹事用）';
+  const field = ([key, label, type]) => {
+    const id = 'f-' + key;
+    const input = type === 'area'
+      ? `<textarea id="${id}" name="${key}">${esc(d[key])}</textarea>`
+      : `<input id="${id}" name="${key}" type="${type === 'date' ? 'date' : 'text'}" value="${esc(d[key])}">`;
+    return `<label for="${id}">${esc(label)}</label>${input}`;
+  };
+  const sections = FIELDS.map(s => {
+    let body = '';
+    if (s.list) {
+      body += `<div id="list-${s.list}">${(d[s.list] || []).map(r => rowHtml(s.list, r[0], r[1])).join('')}</div>
+        <button type="button" class="add" data-add="${s.list}">＋ 行を追加</button>`;
+    }
+    body += (s.items || []).map(field).join('');
+    return `<section class="card"><h2>${esc(s.sec)}</h2>${body}</section>`;
+  }).join('');
+
+  app.innerHTML = `
+    <header class="hero">
+      <div class="org">幹事用</div>
+      <h1>参加案内をつくる</h1>
+      <div class="upd">入力して「案内を作成」を押すと、共有URLとLINE用の文章ができます。</div>
+      ${embedded ? `<a class="btn newtab" href="${esc(location.href)}" target="_blank" rel="noopener">新しいタブで開く ↗</a>` : ''}
+    </header>
+    <form id="f">${sections}
+      <div class="actions">
+        <button type="submit" class="primary">案内を作成</button>
+        <button type="button" id="reset">初期値に戻す</button>
+      </div>
+    </form>
+    <section id="out" class="card out" hidden></section>`;
+
+  const f = document.getElementById('f');
+  f.addEventListener('click', e => {
+    const add = e.target.dataset.add;
+    if (add) document.getElementById('list-' + add).insertAdjacentHTML('beforeend', rowHtml(add));
+    if (e.target.classList.contains('del')) e.target.closest('.row').remove();
+  });
+  f.addEventListener('input', () => saveDraft(collect()));
+  document.getElementById('reset').onclick = () => {
+    if (!confirm('入力内容を初期値に戻しますか？')) return;
+    try { localStorage.removeItem(DRAFT_KEY); } catch {}
+    location.hash = ''; renderEditor(DEFAULTS);
+  };
+  f.addEventListener('submit', async e => {
+    e.preventDefault();
+    const data = collect();
+    data.updated = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);
+    const code = await encode(data);
+    const base = location.href.split('#')[0];
+    const viewUrl = base + '#v=' + code, editUrl = base + '#e=' + code;
+    const text = lineText(data, viewUrl);
+    const out = document.getElementById('out');
+    out.hidden = false;
+    out.innerHTML = `
+      <h2>できあがり</h2>
+      <label>参加者に送るURL</label>
+      <input readonly value="${esc(viewUrl)}">
+      <div class="btns" style="margin-top:8px">
+        <button type="button" class="primary" data-copy="url">URLをコピー</button>
+        <a class="btn" href="${esc(viewUrl)}" target="_blank" rel="noopener">プレビュー</a>
+      </div>
+      ${viewUrl.length > 2000 ? `<p class="warn">URLが長め（${viewUrl.length}文字）です。LINEでは問題ありませんが、文章を少し減らすと安心です。</p>` : ''}
+      <label>LINEに貼る文章</label>
+      <textarea readonly id="o-text">${esc(text)}</textarea>
+      <div class="btns" style="margin-top:8px"><button type="button" data-copy="text">文章をコピー</button></div>
+      <label>編集用URL（幹事用Notionに貼っておく）</label>
+      <p class="lead" style="margin:0">次に直すときや来年の幹事は、このURLを開くと今の内容が入った状態から始められます。</p>
+      <input readonly id="o-edit" value="${esc(editUrl)}">
+      <div class="btns" style="margin-top:8px"><button type="button" data-copy="edit">編集用URLをコピー</button></div>`;
+    out.querySelector('[data-copy=url]').onclick = () => copy(viewUrl, out.querySelector('input'));
+    out.querySelector('[data-copy=text]').onclick = () => copy(text, out.querySelector('#o-text'));
+    out.querySelector('[data-copy=edit]').onclick = () => copy(editUrl, out.querySelector('#o-edit'));
+    out.scrollIntoView({ behavior: 'smooth' });
+  });
+}
+function collect() {
+  const f = document.getElementById('f');
+  const d = {};
+  for (const el of f.querySelectorAll('[name]')) d[el.name] = el.value.trim();
+  for (const key of ['timeline', 'fees']) {
+    d[key] = [...f.querySelectorAll(`[data-list="${key}"]`)]
+      .map(r => [...r.querySelectorAll('input')].map(i => i.value.trim()))
+      .filter(([a, b]) => a || b);
+  }
+  return d;
+}
+function saveDraft(d) { try { localStorage.setItem(DRAFT_KEY, JSON.stringify(d)); } catch {} }
+function loadDraft() {
+  try { const s = localStorage.getItem(DRAFT_KEY); return s ? { ...DEFAULTS, ...JSON.parse(s) } : null; } catch { return null; }
+}
+
+/* ---------- router ---------- */
+async function route() {
+  const m = /^#([ve])=(.+)$/.exec(location.hash);
+  if (m) {
+    try {
+      const d = { ...DEFAULTS, ...(await decode(m[2])) };
+      m[1] === 'v' ? renderView(d, m[2]) : renderEditor(d);
+    } catch {
+      app.innerHTML = `<section class="card"><h2>案内を読み込めませんでした</h2>
+        <p>URLが途中で切れている可能性があります。幹事から届いたURLを、最後までコピーして開き直してください。</p></section>`;
+    }
+  } else {
+    renderEditor(loadDraft() || DEFAULTS);
+  }
+  window.scrollTo(0, 0);
+}
+window.addEventListener('hashchange', route);
+route();
+</script>
+</body>
+</html>
